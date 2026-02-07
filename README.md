@@ -1,35 +1,38 @@
 # New York Taxi Fare Prediction API
 
-A production-ready machine learning API that predicts New York City taxi fares using FastAPI and an XGBoost regression model.  
-This project demonstrates real-world ML engineering practices including robust feature engineering, pipeline-based inference, automated testing, and a clean deployment-oriented architecture.
+A production-oriented **machine learning inference API** that predicts New York City taxi fares using **FastAPI** and an **XGBoost regression model**.  
+The project focuses on **reliable model serving**, consistent feature processing, and clean deployment practices.
 
 ---
 
 ## Overview
 
-The API estimates taxi fares based on trip metadata such as pickup and dropoff locations, pickup time, and passenger count.  
-All feature engineering and inference logic is handled consistently through a trained machine learning pipeline to ensure reliable and reproducible predictions.
+The API estimates taxi fares based on trip-level metadata such as pickup and dropoff locations, pickup time, and passenger count.  
+All feature engineering and inference logic is executed through a single pipeline, ensuring consistency between model logic and API behavior.
 
 ---
 
 ## Machine Learning Approach
 
-- **Model**: XGBoost Regressor
-- **Artifact Format**: Serialized pipeline (`.pkl`)
-- **Inference Strategy**: Pipeline-based prediction to guarantee training–serving consistency
+- **Model**: XGBoost Regressor  
+- **Artifact**: Serialized inference pipeline (`.pkl`)  
+- **Inference Strategy**: End-to-end pipeline execution for deterministic predictions  
 
 ### Feature Engineering
-The model uses engineered features derived from raw inputs:
-- Datetime decomposition (year, month, day, weekday, hour)
-- Haversine distance between pickup and dropoff points
-- Distance from major NYC landmarks:
+
+The model derives structured features from raw inputs, including:
+
+- Datetime decomposition  
+  - Year, month, day, weekday, hour
+- Haversine distance between pickup and dropoff coordinates
+- Distance to major NYC reference points:
   - JFK Airport
   - LaGuardia Airport
   - Newark Airport
   - Metropolitan Museum of Art
   - World Trade Center
 
-This approach improves predictive accuracy while maintaining interpretability.
+These features capture both spatial and temporal trip dynamics while maintaining interpretability.
 
 ---
 
@@ -49,18 +52,20 @@ NEWYORK_TAXI_FARE_API/
 ├── tests/
 │   └── test_predict.py    # API tests
 ├── notebooks/
-│   └── training.ipynb     # Model training notebook
+│   └── training.ipynb     # Model development notebook
 ├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
 ├── pytest.ini
 └── README.md
-
 ```
----
+## API Endpoints
+
 ### Predict Taxi Fare
 
 **POST** `/api/v1/predict`
 
-Predicts the estimated taxi fare for a single trip based on pickup and dropoff details.
+Returns an estimated taxi fare for a single trip.
 
 #### Request Body
 ```json
@@ -72,5 +77,25 @@ Predicts the estimated taxi fare for a single trip based on pickup and dropoff d
   "dropoff_latitude": 40.7527,
   "passenger_count": 1
 }
+```
+#### Response
+```json
+{
+  "predicted_fare": 11.42
+}
+```
+## Running the API with Docker
 
+### Requirements
+- Docker
+- Docker Compose
 
+### Start the Service
+```bash
+docker compose up --build
+```
+##### The API will be available at:
+```
+http://localhost:8000
+http://localhost:8000/docs
+```
